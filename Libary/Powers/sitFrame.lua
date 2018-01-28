@@ -39,7 +39,7 @@ function PlayerList ()
 		local value = selected.properties[prop].value
 		if value ~= "" then
 			if i % 2 == 0 then row = "evenRow" else row = "oddRow" end
-			output = output.."<tr valign=\"middle\" class=\""..row.."\"><td colspan='2'>"..value.."</td><td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=selected, slot=prop}, isGM() and "selected" or "impersonated").."</td>"
+			output = output.."<tr valign=\"middle\" class=\""..row.."\"><td colspan='2'>"..value.."</td><td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=selected, slot=prop, frame=true}, isGM() and "selected" or "impersonated").."</td>"
 		end
 	end
 end
@@ -60,9 +60,9 @@ function NPCList ()
 					if (k) then
 						c = tonumber(string.sub(value, k+1, j-1))
 					end
-					cout = cout.."<td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=sel, slot=prop}, isGM() and "selected" or "impersonated")
+					cout = cout.."<td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=sel, slot=prop, frame=true}, isGM() and "selected" or "impersonated")
 					if c and c > 0 then
-						cout = cout.." "..macro.link("Free", "invInit@lib:Fate", "all", {free=true, aspect=value, token=sel, slot=prop}, isGM() and "selected" or "impersonated")
+						cout = cout.." "..macro.link("Free", "invInit@lib:Fate", "all", {free=true, aspect=value, token=sel, slot=prop, frame=true}, isGM() and "selected" or "impersonated")
 					end
 					cout = cout.."</td></tr>"
 				end
@@ -81,13 +81,13 @@ function SitList ()
 			output = output.."<tr valign=\"middle\" class=\""..row.."\"><td colspan='2'>"..asp.."</td>" 
 			c = c+1
 			local k, j = string.find(asp, "%(%d+%)$")
-			local c = 0
+			local a = 0
 			if (k) then
-				c = tonumber(string.sub(asp, k+1, j-1))
+				a = tonumber(string.sub(asp, k+1, j-1))
 			end
-			output = output.."<td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=asp, token=nil, slot=c}, isGM() and "selected" or "impersonated")
-			if c and c > 0 then
-				output = output.." "..macro.link("Free", "invInit@lib:Fate", "all", {free=true, aspect=asp, token=nil, slot=c}, isGM() and "selected" or "impersonated")
+			output = output.."<td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=asp, token=nil, slot=c, frame=true}, isGM() and "selected" or "impersonated")
+			if a and a > 0 then
+				output = output.." "..macro.link("Free", "invInit@lib:Fate", "all", {free=true, aspect=asp, token=nil, slot=c, frame=true}, isGM() and "selected" or "impersonated")
 			end
 			output = output.."</td></tr>"
 		end

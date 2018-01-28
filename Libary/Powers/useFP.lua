@@ -1,14 +1,22 @@
 --{assert(0, "LUA")}--
 
 function GMUse()
- local imp = tokens.resolve("GM Token")
- imp.properties.CurrentFP.value = imp.properties.CurrentFP.value - 1
- println("GM Uses a Fate point for ", token.name, " GM Has ", imp.properties.CurrentFP.value, " left")
+	local imp = tokens.resolve("GM Token")
+		if imp.properties.CurrentFP.value > 0 then
+			imp.properties.CurrentFP.value = imp.properties.CurrentFP.value - 1
+			println("GM Uses a Fate point for ", token.name, " GM Has ", imp.properties.CurrentFP.value, " left")
+		else
+			println("The GM ran out of Fate Points")
+		end
 end
  
 function PCUse()
- token.properties.CurrentFP.value = token.properties.CurrentFP.value - 1
- println(token.name, " Has spend a fate point and has ", CurrentFP, " left")
+	if token.properties.CurrentFP.value > 0 then
+		token.properties.CurrentFP.value = token.properties.CurrentFP.value - 1
+		println(token.name, " Has spend a fate point and has ", CurrentFP, " left")
+	else
+		println(token.name, " ran out of Fate Points")
+	end
 end
 
 function NPCUse ()
