@@ -108,7 +108,7 @@ output = output.."</tr><tr class='sRowSmall'>"
 	--Physical Take Row
 	for i=1,pCount do
 		if string.sub(pStress,i,i) == "O" then
-			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", "all", {mod="sTake", token=sel, slot="PS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(2).."'></a></td>"
+			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", nil, {mod="sTake", token=sel, slot="PS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(2).."'></a></td>"
 		else
 			output = output.."<td align='center'><img width=25 height=15 src='"..iconRender(2).."'></td>"
 		end
@@ -124,7 +124,7 @@ output = output.."</tr><tr class='sRowSmall'>"
 	--Physical Heal Row
 	for i=1,pCount do
 		if string.sub(pStress,i,i) == "X" then
-			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", "all", {mod="sHeal", token=sel, slot="PS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(3).."'></a></td>"
+			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", nil, {mod="sHeal", token=sel, slot="PS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(3).."'></a></td>"
 		else
 			output = output.."<td align='center'><img width=15 height=15 src='"..iconRender(3).."'></td>"
 		end
@@ -133,7 +133,7 @@ output = output.."</tr><th colspan='"..size.."'>Mental Stress</th><tr class='sRo
 	--Mental Take Row
 	for i=1,mCount do
 		if string.sub(mStress,i,i) == "O" then
-			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", "all", {mod="sTake", token=sel, slot="MS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(2).."'></a></td>"
+			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", nil, {mod="sTake", token=sel, slot="MS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(2).."'></a></td>"
 		else
 			output = output.."<td align='center'><img width=15 height=15 src='"..iconRender(2).."'></td>"
 		end
@@ -149,7 +149,7 @@ output = output.."</tr><tr class='sRowSmall'>"
 	--Mental Heal Row
 	for i=1,mCount do
 		if string.sub(mStress,i,i) == "X" then
-			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", "all", {mod="sHeal", token=sel, slot="MS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(3).."'></a></td>"
+			output = output.."<td align='center'><a href='"..macro.linkText("healthMod@lib:Fate", nil, {mod="sHeal", token=sel, slot="MS", num=i, frame="char"}, isGM() and "selected" or "impersonated").."'<img width=15 height=15 src='"..iconRender(3).."'></a></td>"
 		else
 			output = output.."<td align='center'><img width=15 height=15 src='"..iconRender(3).."'></td>"
 		end
@@ -189,18 +189,57 @@ function PlayerList ()
 		local value = sel.properties[prop].value
 		if value ~= "" then
 			if i % 2 == 0 then row = "evenRow" else row = "oddRow" end
-			output = output.."<tr valign=\"middle\" class=\""..row.."\"><td colspan='2'>"..value.."</td><td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=sel, slot=prop, frame="char"}, isGM() and "selected" or "impersonated").."</td>"
+			output = output.."<tr valign=\"middle\" class=\""..row.."\"><td colspan='2'>"..value.."</td><td align='right'>"..macro.link("Invoke", "invInit@lib:Fate", "all", {free=false, aspect=value, token=sel, slot=prop, frame="char"}, token).."</td></tr>"
 		end
 	end
 	output = output.."</table>"
 end
 
+--list boosts
 
-if token.PC then
+function renderBoost()	
+	local row = ""		
+		output = output.."<table><th colspan='2'>Boost List</th>"
+		output = output.."<tr valign='middle'><td align='right' colspan='2'>"..macro.link("Gain Boost", "ctrlBoost@lib:Fate", "all", {token=sel, mod="bGet", frame="char"}, token).."</td></tr>"
+		if sel.properties.BoostList.converted ~= "" then 	
+			for h, boost in ipairs(sel.properties.BoostList.converted) do		
+				if h % 2 == 0 then row = "evenRow" else row = "oddRow" end
+				output = output.."<tr valign='middle' class='"..row.."'><td>"..boost.."</td><td align='right'>"..macro.link("Use", "ctrlBoost@lib:Fate", "none", {token=sel, aspect=boost, mod="bUse", frame="char"}, token).."</td></tr>"
+			end
+		end
+		output = output.."</table>"
+	
+end
+
+-- render stunts 
+function renderStunts()	
+	local c = 0
+	local row = ""		
+		output = output.."<table><th colspan='2'>Stunt List</th>"
+		output = output.."<tr valign='middle'><td align='right' colspan='2'>"..macro.link("Add/Edit Stunts", "ctrlStunt@lib:Fate", "all", {token=sel, mode="mod", frame="char"}, token).."</td></tr>"
+		if sel.properties.stuntsDB.converted ~= "" then 	
+			for h, stunt in pairs(sel.properties.stuntsDB.converted) do		
+				if c % 2 == 0 then row = "evenRow" else row = "oddRow" end
+				if stunt.sUsed == "No" then
+					output = output.."<tr valign='middle' class='"..row.."'><td>"..stunt.sName.."</td><td align='right'>"..macro.link("Use", "ctrlStunt@lib:Fate", "all", {token=sel, mode="use", stunt=stunt.sName, frame="char"}, token).."</td></tr>"
+				else
+					output = output.."<tr valign='middle' colspan='2' class='"..row.."'><td>"..stunt.sName.."</td></tr>"
+				end
+				c = c+1
+			end
+		end
+		output = output.."</table>"
+	
+end
+
+
+if sel.PC then
  pcNametag()
  renderStress()
  PlayerCon()
  PlayerList()
+ renderBoost()
+ renderStunts()	
  end
 
 

@@ -54,23 +54,13 @@ function sTake ()
 	if slot == "PS" then
 		local current = sel.properties.pStress.converted
 		local i = invoke.num
-		local j = string.len(current)		
-		if i == 1 then
-			sel.properties.pStress.value = "X"..string.sub(current,i+1,j)
-		else
-			sel.properties.pStress.value = string.sub(current,1,i-1).."X"..string.sub(current,i+1,j)
-		end
-				
+		sel.properties.pStress.value = string.sub(current,1,i-1).."X"..string.sub(current,i+1)
+						
 	elseif slot == "MS" then 
 		local current = sel.properties.mStress.converted
 		local i = invoke.num
-		local j = string.len(current)		
-		if i == 1 then
-			sel.properties.mStress.value = "X"..string.sub(current,i+1,j)
-		else
-			sel.properties.mStress.value = string.sub(current,1,i-1).."X"..string.sub(current,i+1,j)
-		end
-						
+		sel.properties.mStress.value = string.sub(current,1,i-1).."X"..string.sub(current,i+1)
+								
 	else
 		println("Error:Unsupported slot")
 		println(toJSON(invoke))
