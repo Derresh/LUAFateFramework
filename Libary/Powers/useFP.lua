@@ -2,9 +2,13 @@
 
 function GMUse()
 	local imp = tokens.resolve("GM Token")
-		if imp.properties.CurrentFP.value > 0 then
-			imp.properties.CurrentFP.value = imp.properties.CurrentFP.value - 1
-			println("GM Uses a Fate point for ", token.name, " GM Has ", imp.properties.CurrentFP.value, " left")
+		if tokens.getLibProperty("GMFP","lib:Fate").value > 0 then
+		
+			pcall(function() 
+			tokens.getLibProperty("GMFP","lib:Fate").value = tokens.getLibProperty("GMFP","lib:Fate").value - 1
+			end)
+			
+			println("GM Uses a Fate point for ", token.name, " GM Has ", tokens.getLibProperty("GMFP","lib:Fate").value, "left")
 		else
 			println("The GM ran out of Fate Points")
 		end
@@ -45,3 +49,4 @@ if isGM() then GMUse()
 	elseif token.pc then PCUse()
 	else NPCUse() 
 end
+

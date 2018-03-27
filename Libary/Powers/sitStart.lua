@@ -1,7 +1,12 @@
 --{assert(0, "LUA")}--
 
+require 'intCommon@lib:Fate'
+
+local data = macro.args
 local list = tokens.getLibProperty("SitAspect","lib:Fate").converted
 if (type(list) ~= "table") then list={} end
+
+
 
 function AddNew()
 	local r= input({content="Add new Situational Aspect", type="LABEL", span="TRUE"}, {type="TEXT", name="AspName"},{content="Number of Free Invokes", type="LABEL", span="TRUE"}, {type="LIST", name="Count", content={"None",1,2,3,4,5,6,7,8,9}},{content="GM Only aspect, check for yes", type="LABEL", span="TRUE"}, {type="CHECK", name="GMOnly", content=0} )
@@ -14,7 +19,7 @@ function AddNew()
 	table.insert(list,result)	
 end
 
-function Edit(aspect)
+function edit(aspect)
 	local aspecttext = list[aspect]
 	local gmonly = string.startsWith(aspecttext, "!")
 	if gmonly then aspecttext = string.sub(aspecttext, 2, -1) end
@@ -33,19 +38,23 @@ function Edit(aspect)
 	list[aspect] = result
 end
 
-function Del(aspect)
-	table.remove(list, aspect)
+function del(slot)
+		
+	local r= input({content="Are You Sure ?", type="LABEL", span="TRUE"}, {type="RADIO", name="Sure", content={"No", "Yes"}})
+	macro.abort(type(r.Sure)~="nummber")
+		
+	if r.Sure == 1 then 
+	table.remove(list, slot)
+	end
 end
 
-
-local r= input({content="Pick Situational Aspect", type="LABEL", span="TRUE"}, {type="RADIO", content={"Add", "Edit", "Delete"}, span=true, orient="h", name="Mode", select=1}, {type="RADIO", content=list, span="true", orient="v", name="Aspect"})
-macro.abort(r)
-
-if r.Mode == 0 then AddNew()
-	elseif r.Mode == 1 then Edit(r.Aspect + 1)
-	else Del(r.Aspect + 1)
+if data.mode == "sitDel" then del(data.slot)
+elseif data.mode == "sitAdd" then AddNew ()
+elseif data.mode == "sitEdit" then edit(data.slot)
+println("ERROR: Unsupported mode in sitStart.lua<br>DEBUG:<br>",toJSON(data))
 end
 
 pcall(function() 
 tokens.getLibProperty("SitAspect","lib:Fate").value = list
 end)
+if data.frame then intRefresh(data.frame) end

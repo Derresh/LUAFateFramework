@@ -19,7 +19,8 @@ end
 function bUse(pick)	
 	for h, test in ipairs(bList) do
 		if test == pick then table.remove(bList, h) end
-	end 
+	end
+	println(token.name," uses ", pick)
 	sel.properties.BoostList.value = bList
 end	
 

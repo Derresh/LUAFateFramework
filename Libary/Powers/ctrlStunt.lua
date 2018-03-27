@@ -10,19 +10,11 @@ if not sel then sel=token end
 
 local sdb = sel.properties.stuntsDB.converted
 
-function modStunt()
-	print("add")
+function addStunt ()
+	StuntD()
 end
 
-function editStunt ()
-	print("edit")
-end
-
-function delStunt ()
-	print("del")
-end
-
-function runStunt (name)
+function runStunt (name,mode)
 	local c = colorPick (name)
 	local s = sdb[name]
 	local html = [[
@@ -34,20 +26,36 @@ function runStunt (name)
 		<tr>
 		<b>Requiers  Fate  Point:  </b>]]..s.sFP..[[
 		</tr>
-		]]..s.sDesc..[[
-		</table>  
-	]]	
-	print(html)
+		]]
+	
+	if s.sType == "Item" then
+		html = html.."<tr><b>Item Aspects:</b>"..s.sItemAsp.."</tr><tr><b>Item Type:</b>"..s.sItemType.."</tr><tr><b>Item Rating:</b>"..s.sItemRate.."</tr>" 
+		
+		for i=1,5,1 do 
+			local pick1 = "sItemStuntName"..i
+			local pick2 = "sItemStunt"..i
+			if s[pick2] ~= "" then html = html.."<tr><b>"..s[pick1].." </b>"..s[pick2].."</tr>" end
+		end
+	end
+			
+	html = html.."<BR><b>Description:</b><br>"..s.sDesc.."</table>"
+	
+	if mode == "use" then print(html)
+	elseif mode == "view" then stuntV(s.sName,html)		
+	else print("something is wrong") end
 	
 	
-	if s.sType == "Arc" or s.sType == "Session" or s.sType == "Scenario" then
+	if mode == "use" then
+		if s.sType == "Arc" or s.sType == "Session" or s.sType == "Scenario" then
 		s.sUsed = "Yes"
 		sdb[name] = s
 		token.properties["stuntsDB"].value = sdb
+		end
 	end
-	
 end
 
-if invoke.mode == "mod" then modStunt()
-elseif invoke.mode == "use" then runStunt(invoke.stunt)
+if invoke.mode == "mod" then addStunt()
+elseif invoke.mode == "use" or invoke.mode == "view" then runStunt(invoke.stunt,invoke.mode)
 else println ("ERROR: Unsupported mod") end
+
+	intRefresh("char")

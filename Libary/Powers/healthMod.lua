@@ -3,10 +3,10 @@
 require 'intCommon@lib:Fate'
 
 local invoke = macro.args
-local sel = invoke.token
+local sel = type(invoke.token) == "string" and tokens.resolve(invoke.token) or invoke.token
 local aspect = invoke.aspect
 local slot = invoke.slot
-sel = tokens.resolve(sel)
+local conDB = token.properties.conDB.converted
 
 function conHeal()
 	
@@ -16,7 +16,7 @@ function conHeal()
 		c = tonumber(string.sub(aspect, i+1, j-1))
 		aspect = string.sub(aspect, 0, i-1) 
 	end
-	sel.properties[slot].value = aspect.." (H)"
+	conDB[slot] = aspect.." (H)"
 	println(sel.name," Has started healing",aspect)	
 
 end
@@ -25,7 +25,7 @@ function conTake()
 
 	local r= input({content="Consequence Name", type="LABEL", span="TRUE"}, {type="TEXT", span=true, name="text"})
 	macro.abort(r)
-	sel.properties[slot].value = r.text.." (1)"
+	conDB[slot] = r.text.." (1)"
 	println(sel.name," Has taken a consequence ",aspect)		
 
 	
@@ -77,4 +77,5 @@ else
 	println(toJSON(invoke))
 end
 
+token.properties.conDB.value = conDB
 intRefresh(invoke.frame)
