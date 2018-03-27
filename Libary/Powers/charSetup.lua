@@ -3,8 +3,6 @@
 require 'intCommon@lib:Fate'
 
 local data = macro.args
-
-
 local target = tokens.resolve(data.token)
 
 function npcHPset()

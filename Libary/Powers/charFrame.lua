@@ -284,11 +284,10 @@ end
 --list player aspects
 function PlayerList ()
 
-	output = output.."<table><th colspan='3'>Aspects"
+	output = output.."<table><th colspan='3'>Aspects</th>"
 	
-	
-	if isGM() and sel.npc and token.properties.Scanned.value == "No" then output = output.." - PC Hidden</th><tr><td align='right' colspan='3'>"..macro.link("Show Aspects", "charSetup@lib:Fate", "none", {mode="scanOn", token=sel, frame="char"}, isGM() and "selected" or "impersonated").."</td></tr>"
-	elseif isGM() and sel.npc and token.properties.Scanned.value == "Yes" then output = output.." - PC Visible</th><tr><td align='right' colspan='3'>"..macro.link("Hide Aspects", "charSetup@lib:Fate", "none", {mode="scanOff", token=sel, frame="char"}, isGM() and "selected" or "impersonated").."</td></tr>"
+	if isGM() and sel.npc and token.properties.Scanned.value == "No" then output = output.."<tr><td>Player Hidden</td><td colspan='2' align='right'>"..macro.link("Show Aspects", "charSetup@lib:Fate", "none", {mode="scanOn", token=sel, frame="char"}, isGM() and "selected" or "impersonated").."</td></tr>"
+	elseif isGM() and sel.npc and token.properties.Scanned.value == "Yes" then output = output.."<tr><td>Player Visible</td><td colspan='2' align='right'>"..macro.link("Hide Aspects", "charSetup@lib:Fate", "none", {mode="scanOff", token=sel, frame="char"}, isGM() and "selected" or "impersonated").."</td></tr>"
 	else
 	output = output.."<tr></tr>"
 	end
